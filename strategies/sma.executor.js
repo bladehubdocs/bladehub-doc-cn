@@ -90,7 +90,7 @@ module.exports={
                 this.setState("createOrder", {
                     price: this.requirements.shot.shot.buy1,
                     amount: -this.amount,
-                    makertOnly: true
+                    marketOnly: true
                 })
             } else {
                 this.setState("watch")
