@@ -40,13 +40,13 @@ module.exports={
                 type: "shot",
                 context: context,
             },
-            market: {
-                type: "runtime",
-                context: context,
-                key: this.option.targetCredential.key,
-                secret: this.option.targetCredential.secret
+            credential: {
+                sp: "bitmex",
+                meta: {
+                    key: this.option.targetCredential.key,
+                    secret: this.option.targetCredential.secret        
+                }
             }
-            
         }
     },
     getAvg(numbers) {
