@@ -1,4 +1,4 @@
-module.exports={
+module.exports = {
     isExecutor: true,
     tickInterval: 1000,
     initialState: "watch",
@@ -73,7 +73,6 @@ module.exports={
             
             this.log(shortAvg - longAvg)
             
-            
             if (shortAvg >= longAvg && this.shortAvg < this.longAvg) {
                 this.setState("createOrder", {
                     price: this.requirements.shot.shot.sell1,
@@ -92,7 +91,6 @@ module.exports={
             
             this.shortAvg = shortAvg
             this.longAvg = longAvg
-            
             
             this.setState("watch")
         }) 
