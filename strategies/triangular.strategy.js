@@ -3,7 +3,6 @@ module.exports = {
     tickInterval: 1000,
     initialState: "watch",
     feeRate: 0.001,
-    profitRate: 0.00,
     OptionDefinition: {
         type: "object",
         fields: [{
@@ -120,7 +119,7 @@ module.exports = {
             this.log("shot ~~~~", shots)
             let positiveRate = this.getPositiveProfitRate()
             let reverseRate = this.getReverseProfitRate()
-            if (positiveRate < this.profitRate && reverseRate < this.profitRate) {
+            if (positiveRate < 0 && reverseRate < 0) {
                 this.setState("watch")    
             } else if (positiveRate >= reverseRate) {
                 this.setState("createOrders", true)
