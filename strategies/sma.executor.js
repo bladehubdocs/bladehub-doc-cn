@@ -2,7 +2,7 @@ module.exports = {
     isExecutor: true,
     tickInterval: 1000,
     initialState: "watch",
-    shortPeriod: 10 * 60 * 1000, 
+    shortPeriod: 10 * 60 * 1000,
     longPeriod: 30 * 60 * 1000,
     amount: 0.001,
     OptionDefinition: {
@@ -19,10 +19,10 @@ module.exports = {
     },
     setup() {
         let context = {
-            name:"huobi_btc_usdt",
-            sp:"huobi",
-            front:"btc",
-            back:"usdt"
+            name: "huobi_btc_usdt",
+            sp: "huobi",
+            front: "btc",
+            back: "usdt"
         }
         this.requirements = {
             shortTrades: {
@@ -30,7 +30,6 @@ module.exports = {
                 context: context,
                 duration: this.shortPeriod
             },
-            
             longTrades: {
                 type: "trades",
                 context: context,
@@ -39,6 +38,11 @@ module.exports = {
             shot: {
                 type: "shot",
                 context: context,
+            },
+            market: {
+                type: "runtime",
+                context: context,
+                credential: this.option.targetCredential
             },
             credential: this.option.targetCredential
         }
@@ -54,25 +58,25 @@ module.exports = {
     longAvg: 0,
     atWatch() {
         this.nextTick(() => {
-            let longTrades =  this.requirements.longTrades
-            let longPrices = longTrades.datas.map((trade) => {
+            let longTrades = this.requirements.longTrades
+            let longPrices = longTrades.trades.map((trade) => {
                 return trade.price
             })
             let longAvg = this.getAvg(longPrices)
-            
-            let shortTrades =  this.requirements.shortTrades
-            let shortPrices = shortTrades.datas.map((trade) => {
+
+            let shortTrades = this.requirements.shortTrades
+            let shortPrices = shortTrades.trades.map((trade) => {
                 return trade.price
             })
             let shortAvg = this.getAvg(shortPrices)
-            
+
             this.log("=======")
-            
-            this.log("longAvg",longAvg,longPrices.length)
-            this.log("shortAvg",shortAvg,shortPrices.length)
-            
+
+            this.log("longAvg", longAvg, longPrices.length)
+            this.log("shortAvg", shortAvg, shortPrices.length)
+
             this.log(shortAvg - longAvg)
-            
+
             if (shortAvg >= longAvg && this.shortAvg < this.longAvg) {
                 this.setState("createOrder", {
                     price: this.requirements.shot.shot.sell1,
@@ -88,19 +92,19 @@ module.exports = {
             } else {
                 this.setState("watch")
             }
-            
+
             this.shortAvg = shortAvg
             this.longAvg = longAvg
-            
+
             this.setState("watch")
-        }) 
+        })
     },
     atCreateOrder(stale, info) {
         if (!this.requirements.market.runtime) {
             this.setState("watch")
             return
         }
-        this.log("create order params",info)
+        this.log("create order params", info)
         let order = this.requirements.market.runtime.createOrder(info)
         this.log("order", order)
         this.setState("watch")
